@@ -17,18 +17,18 @@ class FastRun implements IFastRun {
   public childProcessList = [];
   // 读取本地项目
   public readLocalProject(event: any) {
-    if (!fs.existsSync(__dirname + '/../public/local')) {
-      fs.mkdirSync(__dirname + '/../public/local');
+    if (!fs.existsSync(__dirname + '/../local')) {
+      fs.mkdirSync(__dirname + '/../local');
     }
-    if (!fs.existsSync(__dirname + '/../public/local/project.json')) {
-      fs.writeFile(__dirname + '/../public/local/project.json', JSON.stringify({project: []}), (error: any) => {
-        fs.readFile(__dirname + '/../public/local/project.json', (err: any, data: any) => {
+    if (!fs.existsSync(__dirname + '/../local/project.json')) {
+      fs.writeFile(__dirname + '/../local/project.json', JSON.stringify({project: []}), (error: any) => {
+        fs.readFile(__dirname + '/../local/project.json', (err: any, data: any) => {
           const project = data.toString(); // 将二进制的数据转换为字符串
           event.sender.send('localProject', project);
         });
       });
     } else {
-      fs.readFile(__dirname + '/../public/local/project.json', (err: any, data: any) => {
+      fs.readFile(__dirname + '/../local/project.json', (err: any, data: any) => {
         const project = data.toString(); // 将二进制的数据转换为字符串
         event.sender.send('localProject', project);
       });
@@ -36,12 +36,12 @@ class FastRun implements IFastRun {
   }
   // 本地写文件
   public writeLocalFile(event: any, callback: (localFile: any) => any) {
-    fs.readFile(__dirname + '/../public/local/project.json', (err: any, data: any) => {
+    fs.readFile(__dirname + '/../local/project.json', (err: any, data: any) => {
       let localProject = data.toString(); // 将二进制的数据转换为字符串
       localProject = JSON.parse(localProject);
       localProject = callback(localProject);
       const projectStr = JSON.stringify(localProject);
-      fs.writeFile(__dirname + '/../public/local/project.json', projectStr, (error: any) => {
+      fs.writeFile(__dirname + '/../local/project.json', projectStr, (error: any) => {
         if (error) {
           console.error(error);
         }
@@ -122,7 +122,7 @@ class FastRun implements IFastRun {
     });
   }
   public killAll() {
-    fs.readFile(__dirname + '/../public/local/project.json', (err: any, data: any) => {
+    fs.readFile(__dirname + '/../local/project.json', (err: any, data: any) => {
       let localProject = data.toString(); // 将二进制的数据转换为字符串
       localProject = JSON.parse(localProject);
       localProject.project.forEach(((item: any) => {
